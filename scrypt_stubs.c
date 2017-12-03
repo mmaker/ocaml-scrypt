@@ -6,7 +6,7 @@
 #include <caml/alloc.h>
 #include <caml/callback.h>
 #include <caml/fail.h>
-#include "scrypt.h"
+#include <libscrypt.h>
 
 #define SCRYPT_MALLOC_ERROR 6
 

@@ -1,11 +1,9 @@
-SCRYPT_PATH = libscrypt
-SCRYPT_LIB = $(SCRYPT_PATH)/libscrypt.a
 
-all: $(SCRYPT_LIB)
+all:
 	# Comple just the stubs into an object file.
 	#
 	# The stubs expect to find "scrypt.h" on include path.
-	ocamlfind ocamlopt -o scrypt_stubs scrypt_stubs.c -ccopt -fPIC -ccopt -I$(SCRYPT_PATH)
+	ocamlfind ocamlopt -o scrypt_stubs scrypt_stubs.c -ccopt -fPIC -ccopt -lscrypt
 
 	# Compile scrypt.mli (the interface) to a cmi (compiled module interface).
 	# Compile scrypt.ml to bytecode (cmo).
@@ -29,8 +27,6 @@ all: $(SCRYPT_LIB)
 	#
 	#	scrypt.a, contains scrypt.o:
 	#		Native version of scrypt.ml, does NOT include the stubs.
-	#		XXX: I'm not sure why this has to be a separate archive and isn't combined with libscrypt.a.
-	#		     What happens when you have more files? Do you then have to install a bunch of .a files with your library?
 	#		scrypt.a MUST be installed, see cmxa.
 	#
 	#	scrypt.cma, contains scrypt.cmo:
@@ -46,16 +42,10 @@ all: $(SCRYPT_LIB)
 	#		scrypt.cmx is NOT installed since it is fully contained in scrypt.cmxa.
 	#
 	#	-lcrypto is OpenSSL (scrypt dependency) and must be present on on the system, it will also link the resulting dllscrypt.so with libcrypto.so.
-	ocamlfind ocamlmklib -v -o scrypt scrypt.cmo scrypt.cmx scrypt_stubs.o $(SCRYPT_PATH)/*.o -lcrypto -cclib -lscrypt -cclib -lcrypto
-
-$(SCRYPT_LIB):
-	# Compile scrypt, but immediately explode the library into it's object files.
-	# We do this to merge the objects with scrypt_stubs.o into a new, unified, library under the name libscrypt.a
-	# The merging step happens during ocamlmklib linking.
-	cd libscrypt && make && ar x libscrypt.a
+	ocamlfind ocamlmklib -v -o scrypt scrypt.cmo scrypt.cmx scrypt_stubs.o -lcrypto -cclib -lscrypt -cclib -lcrypto
 
 install:
-	ocamlfind install scrypt META *.cmi *.cmxa *.cma *.a *.so
+	ocamlfind install scrypt META *.cmi *.cmxa *.cma
 
 uninstall:
 	ocamlfind remove scrypt
@@ -66,6 +56,4 @@ docs:
 	ocamlfind ocamldoc -html -d docs scrypt.mli
 
 clean:
-	rm -f *.cmi *.cmxa *.cma *.cmx *.cmo *.o *.so *.a
-	rm -f libscrypt/*.o libscrypt/__.SYMDEF*
-	cd libscrypt && make clean
+	rm -f *.cmi *.cmxa *.cma *.cmx *.cmo *.o

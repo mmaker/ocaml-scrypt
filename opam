@@ -1,0 +1,15 @@
+opam-version: "1"
+name: "scrypt"
+version: "0.2.1"
+maintainer: "Nikolay Zalutskiy <pacemkr@gmail.com>"
+homepage: "https://github.com/pacemkr/ocaml-scrypt"
+license: "BSD-2-Clause"
+doc: "http://pacemkr.github.io/ocaml-scrypt/"
+build: [make]
+install: [make "install"]
+remove: ["ocamlfind" "remove" "scrypt"]
+depends: "ocamlfind"
+depexts: [
+  [["debian"] ["libssl-dev" "libscrypt-dev"]]
+  [["ubuntu"] ["libssl-dev" "libscrypt-dev"]]
+]

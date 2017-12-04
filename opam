@@ -10,6 +10,7 @@ install: [make "install"]
 remove: ["ocamlfind" "remove" "scrypt"]
 depends: "ocamlfind"
 depexts: [
-  [["debian"] ["libssl-dev" "libscrypt-dev"]]
-  [["ubuntu"] ["libssl-dev" "libscrypt-dev"]]
+  [["debian"] ["libscrypt-dev"]]
+  [["ubuntu"] ["libscrypt-dev"]]
+  [["freebsd"] ["security/libscrypt"]]
 ]
